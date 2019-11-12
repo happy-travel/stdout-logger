@@ -41,7 +41,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
             var parameters = GetParameters(state);
 
-            var logJsonEntry = JObject.FromObject(new
+            var jsonLogEntry = JObject.FromObject(new
             {
                 LogName = _name,
                 CreatedAt = Options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now,
@@ -53,7 +53,7 @@ namespace HappyTravel.StdOutLogger.Internals
                 Scopes = GetScopeData()
             }, JsonSerializer.Create(Options.JsonSerializerSettings)).ToString(Formatting.None);
 
-            _loggerProcessor.Log(logJsonEntry);
+            _loggerProcessor.Log(jsonLogEntry);
         }
 
 
