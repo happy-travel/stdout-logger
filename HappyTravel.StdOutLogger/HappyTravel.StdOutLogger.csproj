@@ -5,8 +5,9 @@
     <Copyright>HappyTravel.com</Copyright>
     <Authors>HappyTravel.com</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.3</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

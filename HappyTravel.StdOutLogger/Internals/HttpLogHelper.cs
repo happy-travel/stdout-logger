@@ -47,7 +47,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
         public static string GetRequestId(HttpRequest httpRequest)
         {
-            return httpRequest.Headers.FirstOrDefault(i => i.Key.Equals(ReaquestIdHeader)).Value.FirstOrDefault();
+            return httpRequest.Headers.FirstOrDefault(i => i.Key.Equals(RequestIdHeader)).Value.FirstOrDefault();
         }
 
 
@@ -70,12 +70,14 @@ namespace HappyTravel.StdOutLogger.Internals
             catch
             {
                 //ignore
+                //just skip an error and continue execution
+                //depends on middleware position in the code
             }
 
             return body;
         }
 
 
-        private const string ReaquestIdHeader = "request_id";
+        private const string RequestIdHeader = "request_id";
     }
 }

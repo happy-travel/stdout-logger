@@ -18,7 +18,7 @@ namespace HappyTravel.StdOutLogger
 
         public ILogger CreateLogger(string name)
         {
-            return _loggers.GetOrAdd(name, loggerName => new Internals.StdOutLogger(name, _loggerProcessor)
+            return _loggers.GetOrAdd(name, new Internals.StdOutLogger(name, _loggerProcessor)
             {
                 Options = _options,
                 ScopeProvider = _scopeProvider

@@ -2,9 +2,9 @@
 
 namespace HappyTravel.StdOutLogger.Models
 {
-    public readonly struct HttpContextLog
+    public readonly struct HttpContextLogEntry
     {
-        public HttpContextLog(string traceId, DateTime createdAt, FormattedHttpRequest httpRequest = default,
+        public HttpContextLogEntry(string traceId, DateTime createdAt, FormattedHttpRequest httpRequest = default,
             FormattedHttpResponse httpResponse = default)
         {
             CreatedAt = Equals(createdAt, default)

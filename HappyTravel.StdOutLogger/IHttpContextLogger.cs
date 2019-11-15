@@ -8,6 +8,6 @@ namespace HappyTravel.StdOutLogger
     {
         Task AddHttpRequest(HttpRequest httpRequest);
         void AddHttpResponse(HttpResponse httpResponse);
-        HttpContextLog GetHttpContextLogModel();
+        HttpContextLogEntry GetHttpContextLogModel();
     }
 }

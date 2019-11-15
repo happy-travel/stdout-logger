@@ -17,13 +17,13 @@ namespace HappyTravel.StdOutLogger.Extensions
         }
 
 
-        public static ILoggingBuilder AddStdOut(this ILoggingBuilder builder, Action<StdOutLoggerOptions> configure)
+        public static ILoggingBuilder AddStdOut(this ILoggingBuilder builder, Action<StdOutLoggerOptions> configurationAction)
         {
-            if (configure == null)
-                throw new ArgumentNullException(nameof(configure));
+            if (configurationAction == null)
+                throw new ArgumentNullException(nameof(configurationAction));
 
             builder.AddStdOut();
-            builder.Services.Configure(configure);
+            builder.Services.Configure(configurationAction);
 
             return builder;
         }

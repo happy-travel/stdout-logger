@@ -6,11 +6,11 @@ namespace HappyTravel.StdOutLogger.Extensions
     public static class StdOutLoggerMessageExtensions
     {
         public static void LogInformationToJson(this ILogger logger, EventId eventId, string message,
-            HttpContextLog httpContextContextLog)
+            HttpContextLogEntry httpContextContextLogEntry = default)
         {
             logger.Log(LogLevel.Information,
                 eventId,
-                new {httpContextContextLog.TraceId, HttpContext = httpContextContextLog, Message = message},
+                new {httpContextContextLogEntry.TraceId, HttpContext = httpContextContextLogEntry, Message = message},
                 null,
                 (state, ex) => string.Empty);
         }

@@ -21,9 +21,9 @@ namespace HappyTravel.StdOutLogger
         }
 
 
-        public HttpContextLog GetHttpContextLogModel()
+        public HttpContextLogEntry GetHttpContextLogModel()
         {
-            return new HttpContextLog(_requestId, DateTime.UtcNow, _formattedHttpRequest, _formattedHttpResponse);
+            return new HttpContextLogEntry(_requestId, DateTime.UtcNow, _formattedHttpRequest, _formattedHttpResponse);
         }
 
 

@@ -10,6 +10,7 @@ namespace HappyTravel.StdOutLogger.Options
         public JsonSerializerSettings JsonSerializerSettings { get; set; } = new JsonSerializerSettings
         {
             DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
+            NullValueHandling = NullValueHandling.Ignore,
             Converters = new List<JsonConverter>
                 {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
             MaxDepth = 3

@@ -19,12 +19,13 @@ namespace HappyTravel.StdOutLogger.Internals
             {
                 _outputTask.Wait(TaskDisposeTimeout);
             }
+            // skip canceled exception only and continue execution
             catch (TaskCanceledException)
             {
                 // ignored
             }
             catch (AggregateException ex) when (ex.InnerExceptions.Count == 1 &&
-                                                ex.InnerExceptions[0] is TaskCanceledException)
+                ex.InnerExceptions[0] is TaskCanceledException)
             {
                 // ignored
             }
@@ -46,6 +47,8 @@ namespace HappyTravel.StdOutLogger.Internals
                 }
                 catch
                 {
+                    // an error here is very unlikely
+                    // we ignore it just in case
                     // ignored
                 }
             }
@@ -69,6 +72,8 @@ namespace HappyTravel.StdOutLogger.Internals
             }
             catch (InvalidOperationException)
             {
+                // an error here is very unlikely
+                // we ignore it just in case
                 // ignored
             }
         }
@@ -78,6 +83,5 @@ namespace HappyTravel.StdOutLogger.Internals
         private const int MaxQueuedMessages = 1024;
         private const int TaskDisposeTimeout = 1000;
         private readonly BlockingCollection<string> _messageQueue = new BlockingCollection<string>(MaxQueuedMessages);
-
     }
 }

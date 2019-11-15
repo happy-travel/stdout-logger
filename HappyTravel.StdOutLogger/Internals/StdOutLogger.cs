@@ -41,6 +41,8 @@ namespace HappyTravel.StdOutLogger.Internals
 
             var parameters = GetParameters(state);
 
+            var message = messageBuilder.ToString();
+
             var jsonLogEntry = JObject.FromObject(new
             {
                 LogName = _name,
@@ -48,7 +50,7 @@ namespace HappyTravel.StdOutLogger.Internals
                 LogLevel = logLevel,
                 EventId = eventId,
                 Parameters = parameters,
-                Message = messageBuilder.ToString(),
+                Message = string.IsNullOrEmpty(message) ? null : message,
                 Exception = exception?.ToString(),
                 Scopes = GetScopeData()
             }, JsonSerializer.Create(Options.JsonSerializerSettings)).ToString(Formatting.None);
@@ -57,16 +59,10 @@ namespace HappyTravel.StdOutLogger.Internals
         }
 
 
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return logLevel != LogLevel.None;
-        }
+        public bool IsEnabled(LogLevel logLevel) => logLevel != LogLevel.None;
 
 
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            return ScopeProvider?.Push(state) ?? NullScope.Instance;
-        }
+        public IDisposable BeginScope<TState>(TState state) => ScopeProvider?.Push(state) ?? NullScope.Instance;
 
 
         private object GetParameters<TState>(TState state)

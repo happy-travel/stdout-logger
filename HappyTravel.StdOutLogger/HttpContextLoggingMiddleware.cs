@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using HappyTravel.StdOutLogger.Extensions;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,7 @@ namespace HappyTravel.StdOutLogger
         public async Task Invoke(HttpContext httpContext, IHttpContextLogger httpContextLogger,
             ILogger<HttpContextLoggingMiddleware> logger)
         {
-            if (_options.IgnoredPaths.Contains(httpContext.Request.Path))
+            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value.ToLower(CultureInfo.InvariantCulture)))
             {
                 await _next(httpContext);
             }
