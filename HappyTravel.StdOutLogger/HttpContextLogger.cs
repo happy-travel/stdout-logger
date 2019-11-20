@@ -2,15 +2,23 @@
 using System.Threading.Tasks;
 using HappyTravel.StdOutLogger.Internals;
 using HappyTravel.StdOutLogger.Models;
+using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace HappyTravel.StdOutLogger
 {
     public class HttpContextLogger : IHttpContextLogger
     {
+        public HttpContextLogger(IOptions<StdOutLoggerOptions> options)
+        {
+            _options = options.Value;
+        }
+
+
         public async Task AddHttpRequest(HttpRequest httpRequest)
         {
-            _requestId = HttpLogHelper.GetRequestId(httpRequest);
+            _requestId = HttpLogHelper.GetRequestId(httpRequest, _options.RequestIdHeader);
             _formattedHttpRequest = await HttpLogHelper.GetFormattedHttpRequest(httpRequest);
         }
 
@@ -29,6 +37,7 @@ namespace HappyTravel.StdOutLogger
 
         private FormattedHttpRequest _formattedHttpRequest;
         private FormattedHttpResponse _formattedHttpResponse;
+        private readonly StdOutLoggerOptions _options;
         private string _requestId;
     }
 }

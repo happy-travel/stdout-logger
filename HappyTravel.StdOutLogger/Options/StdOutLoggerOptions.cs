@@ -15,13 +15,14 @@ namespace HappyTravel.StdOutLogger.Options
                 {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
             MaxDepth = 3
         };
-
-
+        
         public HashSet<string> SkippedJsonParameters { get; set; } =
             new HashSet<string> {"MethodInfo", "{OriginalFormat}"};
-
-
+        
         public bool UseUtcTimestamp { get; set; } = true;
+
         public bool IncludeScopes { get; set; } = false;
+
+        public string RequestIdHeader {get; set;} = "x-request-id";
     }
 }

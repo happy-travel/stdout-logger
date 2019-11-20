@@ -45,9 +45,9 @@ namespace HappyTravel.StdOutLogger.Internals
         }
 
 
-        public static string GetRequestId(HttpRequest httpRequest)
+        public static string GetRequestId(HttpRequest httpRequest, string requestIdHeader)
         {
-            return httpRequest.Headers.FirstOrDefault(i => i.Key.Equals(RequestIdHeader)).Value.FirstOrDefault();
+            return httpRequest.Headers.FirstOrDefault(i => i.Key.Equals(requestIdHeader)).Value.FirstOrDefault();
         }
 
 
@@ -76,8 +76,5 @@ namespace HappyTravel.StdOutLogger.Internals
 
             return body;
         }
-
-
-        private const string RequestIdHeader = "request_id";
     }
 }

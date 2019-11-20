@@ -27,10 +27,10 @@ namespace HappyTravel.StdOutLogger
             {
                 await httpContextLogger.AddHttpRequest(httpContext.Request);
                 await _next(httpContext);
-                httpContextLogger.AddHttpResponse(httpContext.Response);
 
                 if (_options.CollectRequestResponseLog)
                 {
+                    httpContextLogger.AddHttpResponse(httpContext.Response);
                     var httpContextLogModel = httpContextLogger.GetHttpContextLogModel();
                     logger.LogInformationToJson(default, string.Empty, httpContextLogModel);
                 }

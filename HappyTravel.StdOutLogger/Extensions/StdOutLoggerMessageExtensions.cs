@@ -10,9 +10,9 @@ namespace HappyTravel.StdOutLogger.Extensions
         {
             logger.Log(LogLevel.Information,
                 eventId,
-                new {httpContextContextLogEntry.TraceId, HttpContext = httpContextContextLogEntry, Message = message},
+                new {httpContextContextLogEntry.RequestId, HttpContext = httpContextContextLogEntry},
                 null,
-                (state, ex) => string.Empty);
+                (state, ex) => message);
         }
     }
 }

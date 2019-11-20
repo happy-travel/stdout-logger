@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -28,6 +29,7 @@ namespace HappyTravel.StdOutLogger.Internals
             }
         }
 
+
         internal IExternalScopeProvider ScopeProvider { get; set; }
 
 
@@ -37,23 +39,30 @@ namespace HappyTravel.StdOutLogger.Internals
             if (!IsEnabled(logLevel))
                 return;
 
-            var messageBuilder = new StringBuilder(formatter != null ? formatter(state, exception) : string.Empty);
+            var message = string.Empty;
+
+            if (formatter != null)
+                message = formatter(state, exception);
 
             var parameters = GetParameters(state);
 
-            var message = messageBuilder.ToString();
+            var requestIdProperty = state.GetType().GetProperty("RequestId");
 
-            var jsonLogEntry = JObject.FromObject(new
-            {
-                LogName = _name,
-                CreatedAt = Options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now,
-                LogLevel = logLevel,
-                EventId = eventId,
-                Parameters = parameters,
-                Message = string.IsNullOrEmpty(message) ? null : message,
-                Exception = exception?.ToString(),
-                Scopes = GetScopeData()
-            }, JsonSerializer.Create(Options.JsonSerializerSettings)).ToString(Formatting.None);
+            var resquestId = string.Empty;
+            if (requestIdProperty != null)
+                resquestId = requestIdProperty.GetValue(state, null) as string;
+
+            var jsonLogEntry = JObject.FromObject(new LogEntry(
+                resquestId,
+                _name,
+                logLevel,
+                eventId,
+                Options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now,
+                string.IsNullOrWhiteSpace(message) ? null : message,
+                parameters,
+                exception,
+                GetScopeData()
+            ), JsonSerializer.Create(Options.JsonSerializerSettings)).ToString(Formatting.None);
 
             _loggerProcessor.Log(jsonLogEntry);
         }
@@ -68,8 +77,12 @@ namespace HappyTravel.StdOutLogger.Internals
         private object GetParameters<TState>(TState state)
         {
             if (state is IEnumerable<KeyValuePair<string, object>> parameters)
-                return parameters.Where(p => !Options.SkippedJsonParameters.Contains(p.Key))
+            {
+                var result = parameters.Where(p => !Options.SkippedJsonParameters.Contains(p.Key))
                     .ToDictionary(i => i.Key, i => i.Value);
+                if (!result.Any())
+                    return null;
+            }
 
             return state;
         }
