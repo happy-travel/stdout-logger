@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,10 +13,11 @@ namespace HappyTravel.StdOutLogger.Internals
 {
     internal class StdOutLogger : ILogger
     {
-        public StdOutLogger(string name, LoggerProcessor loggerProcessor)
+        public StdOutLogger(string name, LoggerProcessor loggerProcessor, IHttpContextAccessor httpContextAccessor)
         {
             _name = name;
             _loggerProcessor = loggerProcessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -46,14 +48,14 @@ namespace HappyTravel.StdOutLogger.Internals
 
             var parameters = GetParameters(state);
 
-            var requestIdProperty = state.GetType().GetProperty("RequestId");
+            var requestId = string.Empty;
 
-            var resquestId = string.Empty;
-            if (requestIdProperty != null)
-                resquestId = requestIdProperty.GetValue(state, null) as string;
+            if (_httpContextAccessor.HttpContext?.Request != null &&
+                _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(_options.RequestIdHeader, out var requestIdString))
+                requestId = requestIdString.FirstOrDefault();
 
             var jsonLogEntry = JObject.FromObject(new LogEntry(
-                resquestId,
+                requestId,
                 _name,
                 logLevel,
                 eventId,
@@ -87,25 +89,14 @@ namespace HappyTravel.StdOutLogger.Internals
             return state;
         }
 
-
-        private JArray GetScopeData()
+        
+        private object GetScopeData()
         {
-            JArray jArray = null;
+            var scopeStorage = new List<object>();
             var scopedProvider = ScopeProvider;
             if (Options.IncludeScopes)
-            {
-                jArray = new JArray();
-                scopedProvider?.ForEachScope((scope, array) =>
-                {
-                    var jScope = JToken.FromObject(scope);
-                    if (jScope is JArray)
-                        array.AddFirst(jScope.ToObject<List<object>>());
-                    else if (jScope is JObject)
-                        array.AddFirst(jScope.ToObject<object>());
-                }, jArray);
-            }
-
-            return jArray;
+                scopedProvider?.ForEachScope((scope, storage) => { storage.Add(scope); }, scopeStorage);
+            return scopeStorage;
         }
 
 
@@ -121,8 +112,9 @@ namespace HappyTravel.StdOutLogger.Internals
         }
 
 
-        private readonly LoggerProcessor _loggerProcessor;
         private readonly string _name;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly LoggerProcessor _loggerProcessor;
         private StdOutLoggerOptions _options;
     }
 }

@@ -15,7 +15,5 @@ namespace HappyTravel.StdOutLogger.Options
         }
 
         public bool CollectRequestResponseLog { get; set; } = false;
-
-        public string RequestIdHeader { get; set; } = "x-request-id";
     }
 }

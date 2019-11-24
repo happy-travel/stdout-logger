@@ -21,7 +21,7 @@ namespace HappyTravel.StdOutLogger.Options
         
         public bool UseUtcTimestamp { get; set; } = true;
 
-        public bool IncludeScopes { get; set; } = false;
+        public bool IncludeScopes { get; set; }
 
         public string RequestIdHeader {get; set;} = "x-request-id";
     }
