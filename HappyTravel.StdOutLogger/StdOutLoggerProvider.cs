@@ -21,7 +21,7 @@ namespace HappyTravel.StdOutLogger
             => _loggers.GetOrAdd(name, new Internals.StdOutLogger(name, _loggerProcessor, _httpContextAccessor)
             {
                 Options = _options,
-                ScopeProvider = _scopeProvider,
+                ScopeProvider = _scopeProvider
             });
 
 

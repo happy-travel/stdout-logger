@@ -82,6 +82,7 @@ namespace HappyTravel.StdOutLogger.Internals
             {
                 var result = parameters.Where(p => !Options.SkippedJsonParameters.Contains(p.Key))
                     .ToDictionary(i => i.Key, i => i.Value);
+                
                 if (!result.Any())
                     return null;
             }
@@ -95,7 +96,11 @@ namespace HappyTravel.StdOutLogger.Internals
             var scopeStorage = new List<object>();
             var scopedProvider = ScopeProvider;
             if (Options.IncludeScopes)
-                scopedProvider?.ForEachScope((scope, storage) => { storage.Add(scope); }, scopeStorage);
+                scopedProvider?.ForEachScope((scope, storage) =>
+                {
+                    storage.Add(scope); 
+                }, scopeStorage);
+            
             return scopeStorage;
         }
 

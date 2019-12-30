@@ -8,7 +8,7 @@
     <PackageVersion>1.0.5</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <Version>1.0.5</Version>
-    <Description>The logger writes JSON format entries into the stdout.</Description>
+    <Description>Logger for writing logs to the stdout in JSON format</Description>
     <AssemblyVersion>1.0.5.0</AssemblyVersion>
     <FileVersion>1.0.5.0</FileVersion>
   </PropertyGroup>

@@ -23,29 +23,33 @@ namespace HappyTravel.StdOutLogger
         public async Task Invoke(HttpContext httpContext,
             ILogger<HttpContextLoggingMiddleware> logger)
         {
-            if (!_options.CollectRequestResponseLog ||
-                _options.IgnoredPaths.Contains(httpContext.Request.Path.Value.ToLower(CultureInfo.InvariantCulture)))
+            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value.ToUpperInvariant()))
             {
                 await _next(httpContext);
+                return;
             }
-            else
-            {
-                var formattedHttpRequest = await HttpLogHelper.GetFormattedHttpRequest(httpContext.Request);
 
-                await _next(httpContext);
+            var formattedHttpRequest = await HttpLogHelper.GetFormattedHttpRequest(httpContext.Request);
+            var createdAt = DateTime.UtcNow;
+            
+            await _next(httpContext);
 
-                var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
-
-                logger.Log(LogLevel.Information, _eventId, new HttpContextLogEntry(DateTime.UtcNow,
-                        formattedHttpRequest,
-                        formattedHttpResponse),
-                    null,
-                    (entry, exception) => string.Empty);
-            }
+            var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
+            
+            logger.Log(LogLevel.Information,
+                _eventId,
+                new HttpContextLogEntry(
+                    createdAt,
+                    formattedHttpRequest,
+                    formattedHttpResponse),
+                null,
+                (entry, exception) => string.Empty);
+            
         }
 
-
-        private readonly EventId _eventId = new EventId(0, "HttpLoggingMiddleware");
+        
+        private readonly EventId _eventId = new EventId(MiddlewareEvenId, "HttpLoggingMiddleware");
+        private const int MiddlewareEvenId = 70000;
         private readonly RequestDelegate _next;
         private readonly HttpContextLoggingMiddlewareOptions _options;
     }
