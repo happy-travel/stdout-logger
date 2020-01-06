@@ -1,4 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.IO;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -7,53 +11,96 @@ namespace HappyTravel.StdOutLogger.Models
     internal readonly struct LogEntry
     {
         [JsonConstructor]
-        public LogEntry(string requestId,
+        public LogEntry(
+            DateTime timestamp,
+            EventId eventId,
             string logName,
             LogLevel logLevel,
-            EventId eventId,
-            DateTime createdAt,
-            string message,
-            object parameters = null,
-            Exception exception = null,
-            object scopes = null)
+            string requestId,
+            string message)
         {
-            RequestId = requestId;
+            Timestamp = timestamp;
+            EventId = eventId;
             LogName = logName;
             LogLevel = logLevel;
-            EventId = eventId;
-            CreatedAt = createdAt;
+            RequestId = requestId;
             Message = message;
-            Parameters = parameters;
-            Exception = exception?.ToString();
-            Scopes = scopes;
         }
 
 
-        [JsonProperty("request_id")]
-        public string RequestId { get; }
+        public string GetJson()
+        {
+            var stringBuilder = new StringBuilder();
+            var stringWriter = new StringWriter(stringBuilder);
 
+            using (var jsonWriter = new JsonTextWriter(stringWriter))
+            {
+                jsonWriter.Formatting = Formatting.None;
+                jsonWriter.Culture = CultureInfo.InvariantCulture;
+                jsonWriter.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                
+                jsonWriter.WriteStartObject();
+                
+                jsonWriter.WritePropertyName("request_id");
+                jsonWriter.WriteValue(RequestId);
+                
+                jsonWriter.WritePropertyName("timestamp");
+                jsonWriter.WriteValue(Timestamp);
+                
+                jsonWriter.WritePropertyName("event_id");
+                jsonWriter.WriteValue(EventId.Id);
+                
+                jsonWriter.WritePropertyName("event_name");
+                jsonWriter.WriteValue(EventId.Name ?? string.Empty);
+                
+                jsonWriter.WritePropertyName("log_name");
+                jsonWriter.WriteValue(LogName);
+                
+                jsonWriter.WritePropertyName("log_level");
+                jsonWriter.WriteValue(GetLogName(LogLevel));
+  
+                jsonWriter.WritePropertyName("message");
+                jsonWriter.WriteValue(Message);
+                
+                jsonWriter.WriteEndObject();
+            }
+            return stringBuilder.ToString();
+        }
+
+
+        private string GetLogName(LogLevel logLevel)
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Trace: return "Trace";
+                case LogLevel.Debug: return "Debug";
+                case LogLevel.Information: return "Information";
+                case LogLevel.Warning: return "Warning";
+                case LogLevel.Error: return "Error";
+                case LogLevel.Critical: return "Critical";
+                case LogLevel.None: return "None";
+                default:
+                    throw new InvalidEnumArgumentException($"{nameof(logLevel)}");
+            }
+        }
+        
+        
+        [JsonProperty("timestamp")]
+        public DateTime Timestamp { get; }
+        
+        [JsonProperty("event_id")]
+        public EventId EventId { get; }
+        
         [JsonProperty("log_name")]
         public string LogName { get; }
 
         [JsonProperty("log_level")]
         public LogLevel LogLevel { get; }
 
-        [JsonProperty("event_id")]
-        public EventId EventId { get; }
-
-        [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; }
-
-        [JsonProperty("parameters")]
-        public object Parameters { get; }
+        [JsonProperty("request_id")]
+        public string RequestId { get; }
 
         [JsonProperty("message")]
         public string Message { get; }
-
-        [JsonProperty("exception")]
-        public string Exception { get; }
-
-        [JsonProperty("scopes")]
-        public object Scopes { get; }
     }
 }

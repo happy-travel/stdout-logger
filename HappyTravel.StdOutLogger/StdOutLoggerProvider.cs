@@ -3,20 +3,21 @@ using HappyTravel.StdOutLogger.Internals;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HappyTravel.StdOutLogger
 {
     public class StdOutLoggerProvider : ILoggerProvider, ISupportExternalScope
     {
-        public StdOutLoggerProvider(StdOutLoggerOptions options, IHttpContextAccessor httpContextAccessor)
+        public StdOutLoggerProvider(IOptions<StdOutLoggerOptions> options, IHttpContextAccessor httpContextAccessor)
         {
-            _options = options;
+            _options = options.Value;
             _loggers = new ConcurrentDictionary<string, Internals.StdOutLogger>();
             _loggerProcessor = new LoggerProcessor();
             _httpContextAccessor = httpContextAccessor;
         }
-
-
+        
+        
         public ILogger CreateLogger(string name)
             => _loggers.GetOrAdd(name, new Internals.StdOutLogger(name, _loggerProcessor, _httpContextAccessor)
             {

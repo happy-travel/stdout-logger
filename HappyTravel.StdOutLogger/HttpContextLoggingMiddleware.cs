@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using HappyTravel.StdOutLogger.Extensions;
 using HappyTravel.StdOutLogger.Internals;
@@ -35,7 +37,7 @@ namespace HappyTravel.StdOutLogger
             await _next(httpContext);
 
             var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
-            
+
             logger.Log(LogLevel.Information,
                 _eventId,
                 new HttpContextLogEntry(
@@ -43,8 +45,31 @@ namespace HappyTravel.StdOutLogger
                     formattedHttpRequest,
                     formattedHttpResponse),
                 null,
-                (entry, exception) => string.Empty);
-            
+                (entry, exception) =>
+                {
+                    var stringBuilder = new StringBuilder();
+
+                    stringBuilder.Append(
+                            $"{nameof(entry.HttpRequest.Host)}: {entry.HttpRequest.Host};")
+                        .Append(
+                            $" {nameof(entry.HttpRequest.Method)}: {entry.HttpRequest.Method};")
+                        .Append(
+                            $" {nameof(entry.HttpRequest.TraceId)}: {entry.HttpRequest.TraceId};");
+
+                    stringBuilder.Append(
+                        string.IsNullOrEmpty(entry.HttpRequest.RequestBody)
+                            ? $" {nameof(entry.HttpRequest.RequestBody)}:;"
+                            : $" {nameof(entry.HttpRequest.RequestBody)}: {entry.HttpRequest.RequestBody};");
+
+                    stringBuilder.Append(
+                            $" RequestHeaders: {string.Join(", ", entry.HttpRequest.Headers)};")
+                        .Append(
+                            $" {nameof(entry.HttpResponse.StatusCode)}: {entry.HttpResponse.StatusCode};")
+                        .Append(
+                            $" ResponseHeaders: {string.Join(", ", entry.HttpResponse.Headers)};");
+
+                    return stringBuilder.ToString();
+                });
         }
 
         
