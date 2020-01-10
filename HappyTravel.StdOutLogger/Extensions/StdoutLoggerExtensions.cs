@@ -7,28 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace HappyTravel.StdOutLogger.Extensions
 {
-    public static class StdoutLoggerExtensions
+    public static class StdOutLoggerExtensions
     {
-        public static ILoggingBuilder AddStdOut(this ILoggingBuilder builder)
+        public static ILoggingBuilder AddStdOutLogger(this ILoggingBuilder builder, Action<StdOutLoggerOptions> setupAction)
         {
+            builder.Services.AddHttpContextAccessor();
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, StdOutLoggerProvider>());
-            builder.Services.TryAddScoped<IHttpContextLogger, HttpContextLogger>();
+            builder.Services.Configure(setupAction);
             return builder;
         }
-
-
-        public static ILoggingBuilder AddStdOut(this ILoggingBuilder builder, Action<StdOutLoggerOptions> configurationAction)
-        {
-            if (configurationAction == null)
-                throw new ArgumentNullException(nameof(configurationAction));
-
-            builder.AddStdOut();
-            builder.Services.Configure(configurationAction);
-
-            return builder;
-        }
-
-
+        
+        
         public static IApplicationBuilder UseHttpContextLogging(
             this IApplicationBuilder builder, Action<HttpContextLoggingMiddlewareOptions> setupAction = default)
         {

@@ -7,21 +7,10 @@ namespace HappyTravel.StdOutLogger.Options
 {
     public class StdOutLoggerOptions
     {
-        public JsonSerializerSettings JsonSerializerSettings { get; set; } = new JsonSerializerSettings
-        {
-            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
-            NullValueHandling = NullValueHandling.Ignore,
-            Converters = new List<JsonConverter>
-                {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
-            MaxDepth = 3
-        };
-
-
-        public HashSet<string> SkippedJsonParameters { get; set; } =
-            new HashSet<string> {"MethodInfo", "{OriginalFormat}"};
-
-
         public bool UseUtcTimestamp { get; set; } = true;
-        public bool IncludeScopes { get; set; } = false;
+
+        public bool IncludeScopes { get; set; }
+
+        public string RequestIdHeader {get; set;} = "x-request-id";
     }
 }

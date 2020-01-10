@@ -5,13 +5,17 @@
     <Copyright>HappyTravel.com</Copyright>
     <Authors>HappyTravel.com</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>1.0.8</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.0</Version>
+    <Version>1.0.5</Version>
+    <Description>Logger for writing logs to the stdout in JSON format</Description>
+    <AssemblyVersion>1.0.8.0</AssemblyVersion>
+    <FileVersion>1.0.8.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>

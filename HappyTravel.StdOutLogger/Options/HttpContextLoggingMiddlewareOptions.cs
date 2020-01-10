@@ -10,10 +10,8 @@ namespace HappyTravel.StdOutLogger.Options
 
         public HashSet<string> IgnoredPaths
         {
-            get => _ignoredPaths.Select(i => i.ToLower(CultureInfo.InvariantCulture)).ToHashSet();
+            get => _ignoredPaths.Select(i => i.ToUpperInvariant()).ToHashSet();
             set => _ignoredPaths = value;
         }
-
-        public bool CollectRequestResponseLog { get; set; } = false;
     }
 }
