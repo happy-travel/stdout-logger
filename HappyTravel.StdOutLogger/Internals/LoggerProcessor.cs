@@ -57,8 +57,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
         private void WriteMessage(string message)
         {
-            Console.Out.Write(message);
-            Console.Out.Flush();
+            Console.WriteLine(message);
         }
 
 
