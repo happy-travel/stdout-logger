@@ -12,14 +12,14 @@ namespace HappyTravel.StdOutLogger.Models
     {
         [JsonConstructor]
         public LogEntry(
-            DateTime timestamp,
+            DateTime createdAt,
             EventId eventId,
             string logName,
             LogLevel logLevel,
             string requestId,
             string message)
         {
-            Timestamp = timestamp;
+            CreatedAt = createdAt;
             EventId = eventId;
             LogName = logName;
             LogLevel = logLevel;
@@ -44,8 +44,8 @@ namespace HappyTravel.StdOutLogger.Models
                 jsonWriter.WritePropertyName("request_id");
                 jsonWriter.WriteValue(RequestId);
                 
-                jsonWriter.WritePropertyName("timestamp");
-                jsonWriter.WriteValue(Timestamp);
+                jsonWriter.WritePropertyName("created_at");
+                jsonWriter.WriteValue(CreatedAt);
                 
                 jsonWriter.WritePropertyName("event_id");
                 jsonWriter.WriteValue(EventId.Id);
@@ -86,7 +86,7 @@ namespace HappyTravel.StdOutLogger.Models
         
         
         [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; }
+        public DateTime CreatedAt { get; }
         
         [JsonProperty("event_id")]
         public EventId EventId { get; }

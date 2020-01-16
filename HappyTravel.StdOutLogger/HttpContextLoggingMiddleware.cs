@@ -10,6 +10,7 @@ using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace HappyTravel.StdOutLogger
 {
@@ -32,7 +33,6 @@ namespace HappyTravel.StdOutLogger
             }
 
             var formattedHttpRequest = await HttpLogHelper.GetFormattedHttpRequest(httpContext.Request);
-            var createdAt = DateTime.UtcNow;
             
             await _next(httpContext);
 
@@ -41,38 +41,19 @@ namespace HappyTravel.StdOutLogger
             logger.Log(LogLevel.Information,
                 _eventId,
                 new HttpContextLogEntry(
-                    createdAt,
                     formattedHttpRequest,
                     formattedHttpResponse),
                 null,
-                (entry, exception) =>
-                {
-                    var stringBuilder = new StringBuilder();
-
-                    stringBuilder.Append(
-                            $"{nameof(entry.HttpRequest.Host)}: {entry.HttpRequest.Host};")
-                        .Append(
-                            $" {nameof(entry.HttpRequest.Method)}: {entry.HttpRequest.Method};")
-                        .Append(
-                            $" {nameof(entry.HttpRequest.TraceId)}: {entry.HttpRequest.TraceId};");
-
-                    stringBuilder.Append(
-                        string.IsNullOrEmpty(entry.HttpRequest.RequestBody)
-                            ? $" {nameof(entry.HttpRequest.RequestBody)}:;"
-                            : $" {nameof(entry.HttpRequest.RequestBody)}: {entry.HttpRequest.RequestBody};");
-
-                    stringBuilder.Append(
-                            $" RequestHeaders: {string.Join(", ", entry.HttpRequest.Headers)};")
-                        .Append(
-                            $" {nameof(entry.HttpResponse.StatusCode)}: {entry.HttpResponse.StatusCode};")
-                        .Append(
-                            $" ResponseHeaders: {string.Join(", ", entry.HttpResponse.Headers)};");
-
-                    return stringBuilder.ToString();
-                });
+                (entry, exception) => JsonConvert.SerializeObject(entry, JsonSerializerSettings));
         }
 
         
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.None,
+            NullValueHandling = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore
+        };
         private readonly EventId _eventId = new EventId(MiddlewareEvenId, "HttpLoggingMiddleware");
         private const int MiddlewareEvenId = 70000;
         private readonly RequestDelegate _next;
