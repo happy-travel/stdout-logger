@@ -4,7 +4,7 @@ namespace HappyTravel.StdOutLogger.Models
 {
     internal readonly struct HttpContextLogEntry
     {
-        public HttpContextLogEntry( FormattedHttpRequest httpRequest = default,
+        public HttpContextLogEntry(FormattedHttpRequest httpRequest = default,
             FormattedHttpResponse httpResponse = default)
         {
             HttpRequest = httpRequest;
