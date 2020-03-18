@@ -6,15 +6,16 @@
     <Authors>HappyTravel.com</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.0.11</PackageVersion>
+    <PackageVersion>1.0.12</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Description>Logger for writing logs to the stdout in JSON format</Description>
     <PackageReleaseNotes>Logger for writing logs to the stdout in JSON format</PackageReleaseNotes>
     <AssemblyVersion>1.0.11</AssemblyVersion>
     <FileVersion>1.0.11</FileVersion>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
-    <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>    
+    <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>    
   </PropertyGroup>
 
   <ItemGroup>

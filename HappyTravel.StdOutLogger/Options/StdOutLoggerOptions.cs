@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+﻿using static HappyTravel.StdOutLogger.Infrastructure.Constants;
 
 namespace HappyTravel.StdOutLogger.Options
 {
@@ -11,6 +8,6 @@ namespace HappyTravel.StdOutLogger.Options
 
         public bool IncludeScopes { get; set; }
 
-        public string RequestIdHeader {get; set;} = "x-request-id";
+        public string RequestIdHeader {get; set;} = DefaultRequestIdHeader;
     }
 }
