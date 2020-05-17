@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace HappyTravel.StdOutLogger.Internals
 {
     internal class StdOutLogger : ILogger
     {
-        public StdOutLogger(string name, LoggerProcessor loggerProcessor, IHttpContextAccessor httpContextAccessor)
+        public StdOutLogger(string name, LoggerProcessor loggerProcessor, IHttpContextAccessor httpContextAccessor, StdOutLoggerOptions options)
         {
             _name = name;
             _loggerProcessor = loggerProcessor;
             _httpContextAccessor = httpContextAccessor;
+            _options = options;
         }
 
         
@@ -52,16 +51,16 @@ namespace HappyTravel.StdOutLogger.Internals
             var requestId = string.Empty;
 
             if (_httpContextAccessor.HttpContext?.Request != null &&
-                _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(Options.RequestIdHeader, out var requestIdString))
+                _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(_options.RequestIdHeader, out var requestIdString))
                 requestId = requestIdString.FirstOrDefault();
-           
-            var logEntry = new LogEntry(
-                Options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now,
-                eventId,
-                _name,
-                logLevel,
-                requestId,
-                messageBuilder.ToString());
+
+            var spanId = Activity.Current.SpanId.ToString();
+            var parentId = Activity.Current.ParentId;
+            var traceId = Activity.Current.RootId;
+
+            var createdAt = _options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now;
+
+            var logEntry = new LogEntry(createdAt, eventId, _name, logLevel, requestId, traceId, parentId, spanId, messageBuilder.ToString());
             
             _loggerProcessor.Log(logEntry.GetJson());
         }
@@ -75,7 +74,7 @@ namespace HappyTravel.StdOutLogger.Internals
     
         private void GetScopedInformation(StringBuilder stringBuilder)
         {
-            if (!Options.IncludeScopes)
+            if (!_options.IncludeScopes)
                 return;
 
             var scopedProvider = ScopeProvider;
@@ -98,10 +97,9 @@ namespace HappyTravel.StdOutLogger.Internals
         }
 
         
-        public StdOutLoggerOptions Options { get; set; }
-        internal IExternalScopeProvider ScopeProvider { get; set; }
-        
-        
+        internal IExternalScopeProvider? ScopeProvider { get; set; }
+
+        private readonly StdOutLoggerOptions _options;
         private readonly string _name;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LoggerProcessor _loggerProcessor;

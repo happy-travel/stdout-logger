@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HappyTravel.StdOutLogger.Extensions;
+﻿using System.Threading.Tasks;
 using HappyTravel.StdOutLogger.Internals;
 using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
@@ -33,7 +27,7 @@ namespace HappyTravel.StdOutLogger
             }
 
             var formattedHttpRequest = await HttpLogHelper.GetFormattedHttpRequest(httpContext.Request);
-            
+
             await _next(httpContext);
 
             var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
@@ -47,15 +41,18 @@ namespace HappyTravel.StdOutLogger
                 (entry, exception) => JsonConvert.SerializeObject(entry, JsonSerializerSettings));
         }
 
-        
+
         private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore
         };
-        private readonly EventId _eventId = new EventId(MiddlewareEvenId, "HttpLoggingMiddleware");
+
+
         private const int MiddlewareEvenId = 70000;
+
+        private readonly EventId _eventId = new EventId(MiddlewareEvenId, "HttpLoggingMiddleware");
         private readonly RequestDelegate _next;
         private readonly HttpContextLoggingMiddlewareOptions _options;
     }

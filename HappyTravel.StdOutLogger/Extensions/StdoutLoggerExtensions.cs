@@ -19,7 +19,7 @@ namespace HappyTravel.StdOutLogger.Extensions
         
         
         public static IApplicationBuilder UseHttpContextLogging(
-            this IApplicationBuilder builder, Action<HttpContextLoggingMiddlewareOptions> setupAction = default)
+            this IApplicationBuilder builder, Action<HttpContextLoggingMiddlewareOptions>? setupAction = default)
         {
             var options = new HttpContextLoggingMiddlewareOptions();
             setupAction?.Invoke(options);
