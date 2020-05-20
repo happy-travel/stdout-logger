@@ -57,15 +57,13 @@ namespace HappyTravel.StdOutLogger.Internals
             var body = string.Empty;
             try
             {
-                using (var reader = new StreamReader(httpRequest.Body,
+                using var reader = new StreamReader(httpRequest.Body,
                     Encoding.UTF8,
                     false,
                     Convert.ToInt32(httpRequest.ContentLength),
-                    true))
-                {
-                    body = await reader.ReadToEndAsync();
-                    httpRequest.Body.Position = 0;
-                }
+                    true);
+                body = await reader.ReadToEndAsync();
+                httpRequest.Body.Position = 0;
             }
             catch
             {

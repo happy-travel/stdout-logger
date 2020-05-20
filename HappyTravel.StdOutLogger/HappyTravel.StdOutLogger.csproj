@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <Copyright>HappyTravel.com</Copyright>
     <Authors>HappyTravel.com</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.0.12</PackageVersion>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.12</Version>
+    <Version>1.0.13</Version>
     <Description>Logger for writing logs to the stdout in JSON format</Description>
-    <PackageReleaseNotes>Logger for writing logs to the stdout in JSON format</PackageReleaseNotes>
+    <PackageReleaseNotes>OpenTelemetry headers support added</PackageReleaseNotes>
     <AssemblyVersion>1.0.11</AssemblyVersion>
     <FileVersion>1.0.11</FileVersion>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
@@ -20,9 +21,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>

@@ -11,19 +11,17 @@ namespace HappyTravel.StdOutLogger.Models
     internal readonly struct LogEntry
     {
         [JsonConstructor]
-        public LogEntry(
-            DateTime createdAt,
-            EventId eventId,
-            string logName,
-            LogLevel logLevel,
-            string requestId,
-            string message)
+        public LogEntry(DateTime createdAt, EventId eventId, string logName, LogLevel logLevel, string requestId, string traceId, string parentSpanId,
+            string spanId, string message)
         {
             CreatedAt = createdAt;
             EventId = eventId;
             LogName = logName;
             LogLevel = logLevel;
             RequestId = requestId;
+            TraceId = traceId;
+            ParentSpanId = parentSpanId;
+            SpanId = spanId;
             Message = message;
         }
 
@@ -33,55 +31,54 @@ namespace HappyTravel.StdOutLogger.Models
             var stringBuilder = new StringBuilder();
             var stringWriter = new StringWriter(stringBuilder);
 
-            using (var jsonWriter = new JsonTextWriter(stringWriter))
+            using var jsonWriter = new JsonTextWriter(stringWriter)
             {
-                jsonWriter.Formatting = Formatting.None;
-                jsonWriter.Culture = CultureInfo.InvariantCulture;
-                jsonWriter.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                Formatting = Formatting.None,
+                Culture = CultureInfo.InvariantCulture,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
+            };
+
+            jsonWriter.WriteStartObject();
                 
-                jsonWriter.WriteStartObject();
+            jsonWriter.WritePropertyName("request_id");
+            jsonWriter.WriteValue(RequestId);
                 
-                jsonWriter.WritePropertyName("request_id");
-                jsonWriter.WriteValue(RequestId);
+            jsonWriter.WritePropertyName("created_at");
+            jsonWriter.WriteValue(CreatedAt);
                 
-                jsonWriter.WritePropertyName("created_at");
-                jsonWriter.WriteValue(CreatedAt);
+            jsonWriter.WritePropertyName("event_id");
+            jsonWriter.WriteValue(EventId.Id);
                 
-                jsonWriter.WritePropertyName("event_id");
-                jsonWriter.WriteValue(EventId.Id);
+            jsonWriter.WritePropertyName("event_name");
+            jsonWriter.WriteValue(EventId.Name ?? string.Empty);
                 
-                jsonWriter.WritePropertyName("event_name");
-                jsonWriter.WriteValue(EventId.Name ?? string.Empty);
+            jsonWriter.WritePropertyName("log_name");
+            jsonWriter.WriteValue(LogName);
                 
-                jsonWriter.WritePropertyName("log_name");
-                jsonWriter.WriteValue(LogName);
-                
-                jsonWriter.WritePropertyName("log_level");
-                jsonWriter.WriteValue(GetLogName(LogLevel));
+            jsonWriter.WritePropertyName("log_level");
+            jsonWriter.WriteValue(GetLogName(LogLevel));
   
-                jsonWriter.WritePropertyName("message");
-                jsonWriter.WriteValue(Message);
+            jsonWriter.WritePropertyName("message");
+            jsonWriter.WriteValue(Message);
                 
-                jsonWriter.WriteEndObject();
-            }
+            jsonWriter.WriteEndObject();
             return stringBuilder.ToString();
         }
 
 
-        private string GetLogName(LogLevel logLevel)
+        private static string GetLogName(LogLevel logLevel)
         {
-            switch (logLevel)
+            return logLevel switch
             {
-                case LogLevel.Trace: return "Trace";
-                case LogLevel.Debug: return "Debug";
-                case LogLevel.Information: return "Information";
-                case LogLevel.Warning: return "Warning";
-                case LogLevel.Error: return "Error";
-                case LogLevel.Critical: return "Critical";
-                case LogLevel.None: return "None";
-                default:
-                    throw new InvalidEnumArgumentException($"{nameof(logLevel)}");
-            }
+                LogLevel.Trace => "Trace",
+                LogLevel.Debug => "Debug",
+                LogLevel.Information => "Information",
+                LogLevel.Warning => "Warning",
+                LogLevel.Error => "Error",
+                LogLevel.Critical => "Critical",
+                LogLevel.None => "None",
+                _ => throw new InvalidEnumArgumentException($"{nameof(logLevel)}")
+            };
         }
         
         
@@ -99,6 +96,15 @@ namespace HappyTravel.StdOutLogger.Models
 
         [JsonProperty("request_id")]
         public string RequestId { get; }
+
+        [JsonProperty("trace_id")]
+        public string TraceId { get; }
+
+        [JsonProperty("parent_span_id")]
+        public string ParentSpanId { get; }
+
+        [JsonProperty("span_id")]
+        public string SpanId { get; }
 
         [JsonProperty("message")]
         public string Message { get; }
