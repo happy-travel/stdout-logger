@@ -54,10 +54,17 @@ namespace HappyTravel.StdOutLogger.Internals
                 _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(_options.RequestIdHeader, out var requestIdString))
                 requestId = requestIdString.FirstOrDefault();
 
-            var spanId = Activity.Current.SpanId.ToString();
-            var parentId = Activity.Current.ParentId;
-            var traceId = Activity.Current.RootId;
+            var spanId = string.Empty;
+            var parentId = string.Empty; 
+            var traceId = string.Empty;
 
+            if (Activity.Current != null)
+            {
+                spanId = Activity.Current.SpanId.ToString(); 
+                parentId = Activity.Current.ParentId;
+                traceId = Activity.Current.RootId;
+            }
+            
             var createdAt = _options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now;
 
             var logEntry = new LogEntry(createdAt, eventId, _name, logLevel, requestId, traceId, parentId, spanId, messageBuilder.ToString());
