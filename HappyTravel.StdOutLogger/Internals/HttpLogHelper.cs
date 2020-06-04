@@ -53,7 +53,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
         private static async Task<string> GetRequestBody(HttpRequest httpRequest)
         {
-            httpRequest.EnableBuffering(50 * 1024, 100 * 1024);
+            httpRequest.EnableBuffering(50 * 1024, 1000 * 1024);
             var body = string.Empty;
             try
             {
