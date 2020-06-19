@@ -9,14 +9,12 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.13</Version>
     <Description>Logger for writing logs to the stdout in JSON format</Description>
     <PackageReleaseNotes>OpenTelemetry headers support added</PackageReleaseNotes>
-    <AssemblyVersion>1.0.15</AssemblyVersion>
-    <FileVersion>1.0.15</FileVersion>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.15</Version>
     <PackageVersion>1.0.15</PackageVersion>    
   </PropertyGroup>
 
