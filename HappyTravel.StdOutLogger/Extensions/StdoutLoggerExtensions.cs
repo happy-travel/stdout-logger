@@ -14,6 +14,7 @@ namespace HappyTravel.StdOutLogger.Extensions
             builder.Services.AddHttpContextAccessor();
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, StdOutLoggerProvider>());
             builder.Services.Configure(setupAction);
+
             return builder;
         }
         
@@ -23,6 +24,7 @@ namespace HappyTravel.StdOutLogger.Extensions
         {
             var options = new HttpContextLoggingMiddlewareOptions();
             setupAction?.Invoke(options);
+
             return builder.UseMiddleware<HttpContextLoggingMiddleware>(options);
         }
     }

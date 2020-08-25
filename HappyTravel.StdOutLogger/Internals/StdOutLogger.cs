@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,17 +22,12 @@ namespace HappyTravel.StdOutLogger.Internals
         }
 
         
-        public void Log<TState>(
-            LogLevel logLevel, 
-            EventId eventId, 
-            TState state, 
-            Exception exception,
-            Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             if (!IsEnabled(logLevel))
                 return;
 
-            if (formatter == null)
+            if (formatter is null)
                 throw new ArgumentNullException(nameof(formatter));
             
             var message = formatter(state, exception);
@@ -68,6 +64,16 @@ namespace HappyTravel.StdOutLogger.Internals
             var createdAt = _options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now;
 
             var logEntry = new LogEntry(createdAt, eventId, _name, logLevel, requestId, traceId, parentId, spanId, messageBuilder.ToString());
+            if (exception?.Data != null)
+            {
+                foreach (DictionaryEntry entry in exception.Data!)
+                {
+                    if (entry.Value is null)
+                        continue;
+
+                    logEntry.Data.Add(entry.Key.ToString()!, entry.Value ?? "null");
+                }
+            }
             
             _loggerProcessor.Log(logEntry.GetJson());
         }
@@ -77,8 +83,8 @@ namespace HappyTravel.StdOutLogger.Internals
 
 
         public IDisposable BeginScope<TState>(TState state) => ScopeProvider?.Push(state) ?? NullScope.Instance;
-        
-    
+
+
         private void GetScopedInformation(StringBuilder stringBuilder)
         {
             if (!_options.IncludeScopes)
@@ -89,10 +95,8 @@ namespace HappyTravel.StdOutLogger.Internals
                 {
                     if (scope is IEnumerable<KeyValuePair<string, object>> properties)
                     {
-                        foreach (var pair in properties)
-                        {
-                            sb.Append(pair.Key).Append(": ").AppendLine(pair.Value?.ToString());
-                        }
+                        foreach (var (key, value) in properties)
+                            sb.Append(key).Append(": ").AppendLine(value?.ToString());
                     }
                     else if (scope != null)
                     {
@@ -103,7 +107,7 @@ namespace HappyTravel.StdOutLogger.Internals
             stringBuilder.AppendLine();
         }
 
-        
+
         internal IExternalScopeProvider? ScopeProvider { get; set; }
 
         private readonly StdOutLoggerOptions _options;

@@ -17,8 +17,7 @@ namespace HappyTravel.StdOutLogger
         }
 
 
-        public async Task Invoke(HttpContext httpContext,
-            ILogger<HttpContextLoggingMiddleware> logger)
+        public async Task Invoke(HttpContext httpContext, ILogger<HttpContextLoggingMiddleware> logger)
         {
             if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value.ToUpperInvariant()))
             {
@@ -32,12 +31,7 @@ namespace HappyTravel.StdOutLogger
 
             var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
 
-            logger.Log(LogLevel.Information,
-                _eventId,
-                new HttpContextLogEntry(
-                    formattedHttpRequest,
-                    formattedHttpResponse),
-                null,
+            logger.Log(LogLevel.Information, _eventId, new HttpContextLogEntry(formattedHttpRequest, formattedHttpResponse), null,
                 (entry, exception) => JsonConvert.SerializeObject(entry, JsonSerializerSettings));
         }
 

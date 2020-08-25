@@ -4,8 +4,7 @@ namespace HappyTravel.StdOutLogger.Models
 {
     public readonly struct FormattedHttpRequest
     {
-        public FormattedHttpRequest(string traceId, string method, string host, string path,
-            List<string> headers, string requestBody)
+        public FormattedHttpRequest(string traceId, string method, string host, string path, List<string> headers, string requestBody)
         {
             TraceId = traceId;
             Method = method;
