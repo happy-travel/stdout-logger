@@ -14,8 +14,8 @@
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.15</Version>
-    <PackageVersion>1.0.15</PackageVersion>    
+    <Version>1.0.16</Version>
+    <PackageVersion>1.0.16</PackageVersion>    
   </PropertyGroup>
 
   <ItemGroup>
