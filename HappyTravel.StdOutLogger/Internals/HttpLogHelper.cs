@@ -29,9 +29,6 @@ namespace HappyTravel.StdOutLogger.Internals
 
         public static FormattedHttpResponse GetFormattedHttpResponse(HttpResponse httpResponse)
         {
-            if (httpResponse is null)
-                return new FormattedHttpResponse();
-
             var statusCode = httpResponse.StatusCode;
             var headers = GetFormattedHeaders(httpResponse.Headers);
 
@@ -44,16 +41,14 @@ namespace HappyTravel.StdOutLogger.Internals
             return headerDictionary.Where(h => h.Value.Any()).Select(h => $"{h.Key}: {h.Value.First()}").ToList();
         }
 
-
-        public static string GetRequestId(HttpRequest httpRequest, string requestIdHeader)
-        {
-            return httpRequest.Headers.FirstOrDefault(i => i.Key.Equals(requestIdHeader)).Value.FirstOrDefault();
-        }
-
+        
 
         private static async Task<string> GetRequestBody(HttpRequest httpRequest)
         {
-            httpRequest.EnableBuffering(50 * 1024, 1000 * 1024);
+            if (!CanRequestBodyBeRetrieved())
+                return string.Empty;
+            
+            httpRequest.EnableBuffering(BufferThreshold, BufferLimit);
             var body = string.Empty;
             try
             {
@@ -73,6 +68,15 @@ namespace HappyTravel.StdOutLogger.Internals
             }
 
             return body;
+
+
+            bool CanRequestBodyBeRetrieved()
+                => httpRequest.ContentLength != null && httpRequest.ContentLength.Value < BufferLimit &&
+                    httpRequest.ContentType.IndexOf("multipart/form-data", StringComparison.Ordinal) == -1;
         }
+
+
+        private const int BufferThreshold = 2 * 1024 * 1024;
+        private const int BufferLimit = 10 * 1024 * 1024;
     }
 }
