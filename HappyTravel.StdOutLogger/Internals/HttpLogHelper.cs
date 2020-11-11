@@ -45,7 +45,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
         private static async Task<string> GetRequestBody(HttpRequest httpRequest)
         {
-            if (!CanBeRequestBodyRetrieved())
+            if (!CanRequestBodyBeRetrieved())
                 return string.Empty;
             
             httpRequest.EnableBuffering(BufferThreshold, BufferLimit);
@@ -70,7 +70,7 @@ namespace HappyTravel.StdOutLogger.Internals
             return body;
 
 
-            bool CanBeRequestBodyRetrieved()
+            bool CanRequestBodyBeRetrieved()
                 => httpRequest.ContentLength != null && httpRequest.ContentLength.Value < BufferLimit &&
                     httpRequest.ContentType.IndexOf("multipart/form-data", StringComparison.Ordinal) == -1;
         }

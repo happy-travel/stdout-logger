@@ -15,8 +15,8 @@
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageVersion>1.0.16</PackageVersion>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp5.0</TargetFrameworks>    
+    <Version>1.0.16</Version>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>    
   </PropertyGroup>
 
   <ItemGroup>
