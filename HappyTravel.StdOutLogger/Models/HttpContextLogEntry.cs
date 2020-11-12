@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HappyTravel.StdOutLogger.Models
+﻿namespace HappyTravel.StdOutLogger.Models
 {
     internal readonly struct HttpContextLogEntry
     {

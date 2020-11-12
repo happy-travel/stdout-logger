@@ -13,9 +13,6 @@ namespace HappyTravel.StdOutLogger.Internals
     {
         public static async Task<FormattedHttpRequest> GetFormattedHttpRequest(HttpRequest httpRequest)
         {
-            if (httpRequest is null)
-                return new FormattedHttpRequest();
-
             var traceId = httpRequest.HttpContext.TraceIdentifier;
             var method = httpRequest.Method;
             var path = httpRequest.Path;
@@ -72,7 +69,7 @@ namespace HappyTravel.StdOutLogger.Internals
 
             bool CanRequestBodyBeRetrieved()
                 => httpRequest.ContentLength != null && httpRequest.ContentLength.Value < BufferLimit &&
-                    httpRequest.ContentType.IndexOf("multipart/form-data", StringComparison.Ordinal) == -1;
+                   !string.IsNullOrEmpty(httpRequest.ContentType) && httpRequest.ContentType.IndexOf("multipart/form-data", StringComparison.Ordinal) == -1;
         }
 
 
