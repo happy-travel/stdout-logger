@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -23,6 +25,8 @@ namespace HappyTravel.StdOutLogger.Models
             ParentSpanId = parentSpanId;
             SpanId = spanId;
             Message = message;
+
+            Data = new Dictionary<string, object>();
         }
 
 
@@ -39,28 +43,42 @@ namespace HappyTravel.StdOutLogger.Models
             };
 
             jsonWriter.WriteStartObject();
-                
+
             jsonWriter.WritePropertyName("request_id");
             jsonWriter.WriteValue(RequestId);
-                
+
             jsonWriter.WritePropertyName("created_at");
             jsonWriter.WriteValue(CreatedAt);
-                
+
             jsonWriter.WritePropertyName("event_id");
             jsonWriter.WriteValue(EventId.Id);
-                
+
             jsonWriter.WritePropertyName("event_name");
             jsonWriter.WriteValue(EventId.Name ?? string.Empty);
-                
+
             jsonWriter.WritePropertyName("log_name");
             jsonWriter.WriteValue(LogName);
-                
+
             jsonWriter.WritePropertyName("log_level");
             jsonWriter.WriteValue(GetLogName(LogLevel));
-  
+
             jsonWriter.WritePropertyName("message");
             jsonWriter.WriteValue(Message);
-                
+
+            if (Data.Any())
+            {
+                jsonWriter.WritePropertyName("data");
+                jsonWriter.WriteStartObject();
+
+                foreach (var (key, value) in Data)
+                {
+                    jsonWriter.WritePropertyName(key);
+                    jsonWriter.WriteValue(value.ToString());
+                }
+
+                jsonWriter.WriteEndObject();
+            }
+
             jsonWriter.WriteEndObject();
             return stringBuilder.ToString();
         }
@@ -80,14 +98,14 @@ namespace HappyTravel.StdOutLogger.Models
                 _ => throw new InvalidEnumArgumentException($"{nameof(logLevel)}")
             };
         }
-        
-        
+
+
         [JsonProperty("timestamp")]
         public DateTime CreatedAt { get; }
-        
+
         [JsonProperty("event_id")]
         public EventId EventId { get; }
-        
+
         [JsonProperty("log_name")]
         public string LogName { get; }
 
@@ -108,5 +126,8 @@ namespace HappyTravel.StdOutLogger.Models
 
         [JsonProperty("message")]
         public string Message { get; }
+
+        [JsonProperty("data")]
+        public Dictionary<string, object> Data { get; }
     }
 }
