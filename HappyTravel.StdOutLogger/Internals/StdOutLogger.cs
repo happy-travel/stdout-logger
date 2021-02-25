@@ -46,9 +46,16 @@ namespace HappyTravel.StdOutLogger.Internals
             
             var requestId = string.Empty;
 
-            if (_httpContextAccessor.HttpContext?.Request != null &&
-                _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(_options.RequestIdHeader, out var requestIdString))
-                requestId = requestIdString.FirstOrDefault();
+            try
+            {
+                if (_httpContextAccessor.HttpContext?.Request != null &&
+                    _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(_options.RequestIdHeader, out var requestIdString))
+                    requestId = requestIdString.FirstOrDefault();
+            }
+            catch (ObjectDisposedException)
+            {
+                //
+            }
 
             var spanId = string.Empty;
             var parentId = string.Empty; 
