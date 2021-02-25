@@ -54,7 +54,7 @@ namespace HappyTravel.StdOutLogger.Internals
             }
             catch (ObjectDisposedException)
             {
-                //
+                // resume normal operation of writing log without request data 
             }
 
             var spanId = string.Empty;
