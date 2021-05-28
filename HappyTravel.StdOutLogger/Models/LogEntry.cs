@@ -89,7 +89,7 @@ namespace HappyTravel.StdOutLogger.Models
             };
         }
 
-        private void WriteDictionary(Dictionary<string, object> dictionary, string propertyName, JsonWriter jsonWriter)
+        private static void WriteDictionary(Dictionary<string, object> dictionary, string propertyName, JsonWriter jsonWriter)
         {
             if (!dictionary.Any()) return;
             
