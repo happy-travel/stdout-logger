@@ -27,6 +27,7 @@ namespace HappyTravel.StdOutLogger.Models
             Message = message;
 
             Data = new Dictionary<string, object>();
+            Scope = new Dictionary<string, object>();
         }
 
 
@@ -64,20 +65,9 @@ namespace HappyTravel.StdOutLogger.Models
 
             jsonWriter.WritePropertyName("message");
             jsonWriter.WriteValue(Message);
-
-            if (Data.Any())
-            {
-                jsonWriter.WritePropertyName("data");
-                jsonWriter.WriteStartObject();
-
-                foreach (var (key, value) in Data)
-                {
-                    jsonWriter.WritePropertyName(key);
-                    jsonWriter.WriteValue(value.ToString());
-                }
-
-                jsonWriter.WriteEndObject();
-            }
+            
+            WriteDictionary(Data, "data", jsonWriter);
+            WriteDictionary(Scope, "scope", jsonWriter);
 
             jsonWriter.WriteEndObject();
             return stringBuilder.ToString();
@@ -97,6 +87,22 @@ namespace HappyTravel.StdOutLogger.Models
                 LogLevel.None => "None",
                 _ => throw new InvalidEnumArgumentException($"{nameof(logLevel)}")
             };
+        }
+
+        private static void WriteDictionary(Dictionary<string, object> dictionary, string propertyName, JsonWriter jsonWriter)
+        {
+            if (!dictionary.Any()) return;
+            
+            jsonWriter.WritePropertyName(propertyName);
+            jsonWriter.WriteStartObject();
+
+            foreach (var (key, value) in dictionary)
+            {
+                jsonWriter.WritePropertyName(key);
+                jsonWriter.WriteValue(value.ToString());
+            }
+
+            jsonWriter.WriteEndObject();
         }
 
 
@@ -129,5 +135,8 @@ namespace HappyTravel.StdOutLogger.Models
 
         [JsonProperty("data")]
         public Dictionary<string, object> Data { get; }
+        
+        [JsonProperty("scope")]
+        public Dictionary<string, object> Scope { get; }
     }
 }

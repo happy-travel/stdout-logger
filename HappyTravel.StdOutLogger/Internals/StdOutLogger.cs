@@ -36,9 +36,7 @@ namespace HappyTravel.StdOutLogger.Internals
                 return;
             
             var messageBuilder = new StringBuilder();
-            
-            GetScopedInformation(messageBuilder);
-            
+
             messageBuilder.Append(message);
 
             if (exception != null)
@@ -82,6 +80,8 @@ namespace HappyTravel.StdOutLogger.Internals
                 }
             }
             
+            AddScopedInformation(logEntry, messageBuilder);
+            
             _loggerProcessor.Log(logEntry.GetJson());
         }
 
@@ -92,7 +92,7 @@ namespace HappyTravel.StdOutLogger.Internals
         public IDisposable BeginScope<TState>(TState state) => ScopeProvider?.Push(state) ?? NullScope.Instance;
 
 
-        private void GetScopedInformation(StringBuilder stringBuilder)
+        private void AddScopedInformation(LogEntry logEntry, StringBuilder stringBuilder)
         {
             if (!_options.IncludeScopes)
                 return;
@@ -103,7 +103,7 @@ namespace HappyTravel.StdOutLogger.Internals
                     if (scope is IEnumerable<KeyValuePair<string, object>> properties)
                     {
                         foreach (var (key, value) in properties)
-                            sb.Append(key).Append(": ").AppendLine(value?.ToString());
+                            logEntry.Scope.Add(key, value?.ToString() ?? string.Empty);
                     }
                     else if (scope != null)
                     {
@@ -111,7 +111,6 @@ namespace HappyTravel.StdOutLogger.Internals
                     }
                 },
                 stringBuilder);
-            stringBuilder.AppendLine();
         }
 
 
