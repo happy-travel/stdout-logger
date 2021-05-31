@@ -5,7 +5,7 @@
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <Copyright>HappyTravel.com</Copyright>
-    <Authors>Happytravel.com</Authors>
+    <Authors>Oleg Konovalov, Denis Nikolaev</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
