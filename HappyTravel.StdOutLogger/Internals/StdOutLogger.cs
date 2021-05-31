@@ -118,7 +118,8 @@ namespace HappyTravel.StdOutLogger.Internals
 
         private static string GetMessageTemplate<TState>(TState state)
         {
-            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) return string.Empty;
+            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) 
+                return string.Empty;
 
             return values.Where(v => v.Key == MessageTemplateKey)
                 .Select(v => v.Value)
@@ -128,7 +129,8 @@ namespace HappyTravel.StdOutLogger.Internals
 
         private static void AddMessageVariables<TState>(LogEntry logEntry, TState state)
         {
-            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) return;
+            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) 
+                return;
             
             foreach (var (key, value) in values.Where(v => v.Key != MessageTemplateKey))
             {
