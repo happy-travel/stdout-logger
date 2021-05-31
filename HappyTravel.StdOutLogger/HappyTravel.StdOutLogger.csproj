@@ -5,16 +5,16 @@
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <Copyright>HappyTravel.com</Copyright>
-    <Authors>Happytravel.com</Authors>
+    <Authors>Oleg Konovalov, Denis Nikolaev</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Logger for writing logs to the stdout in JSON format</Description>
-    <PackageReleaseNotes>Moved scoped information to separate dictionary</PackageReleaseNotes>
+    <PackageReleaseNotes>Added message template and variables</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

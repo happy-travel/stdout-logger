@@ -5,8 +5,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace HappyTravel.StdOutLogger.Models
 {
@@ -14,7 +16,7 @@ namespace HappyTravel.StdOutLogger.Models
     {
         [JsonConstructor]
         public LogEntry(DateTime createdAt, EventId eventId, string logName, LogLevel logLevel, string requestId, string traceId, string parentSpanId,
-            string spanId, string message)
+            string spanId, string message, string messageTemplate)
         {
             CreatedAt = createdAt;
             EventId = eventId;
@@ -25,9 +27,11 @@ namespace HappyTravel.StdOutLogger.Models
             ParentSpanId = parentSpanId;
             SpanId = spanId;
             Message = message;
+            MessageTemplate = messageTemplate;
 
             Data = new Dictionary<string, object>();
             Scope = new Dictionary<string, object>();
+            Renderings = new Dictionary<string, object>();
         }
 
 
@@ -66,6 +70,10 @@ namespace HappyTravel.StdOutLogger.Models
             jsonWriter.WritePropertyName("message");
             jsonWriter.WriteValue(Message);
             
+            jsonWriter.WritePropertyName("messageTemplate");
+            jsonWriter.WriteValue(MessageTemplate);
+            
+            WriteDictionary(Renderings, "renderings", jsonWriter);
             WriteDictionary(Data, "data", jsonWriter);
             WriteDictionary(Scope, "scope", jsonWriter);
 
@@ -99,7 +107,11 @@ namespace HappyTravel.StdOutLogger.Models
             foreach (var (key, value) in dictionary)
             {
                 jsonWriter.WritePropertyName(key);
-                jsonWriter.WriteValue(value.ToString());
+                
+                if(value is string str)
+                    jsonWriter.WriteValue(str);
+                else
+                    jsonWriter.WriteValue(JsonConvert.SerializeObject(value));
             }
 
             jsonWriter.WriteEndObject();
@@ -132,11 +144,17 @@ namespace HappyTravel.StdOutLogger.Models
 
         [JsonProperty("message")]
         public string Message { get; }
+        
+        [JsonProperty("messageTemplate")]
+        public string MessageTemplate { get; }
 
         [JsonProperty("data")]
         public Dictionary<string, object> Data { get; }
         
         [JsonProperty("scope")]
         public Dictionary<string, object> Scope { get; }
+        
+        [JsonProperty("renderings")]
+        public Dictionary<string, object> Renderings { get; }
     }
 }

@@ -67,8 +67,9 @@ namespace HappyTravel.StdOutLogger.Internals
             }
             
             var createdAt = _options.UseUtcTimestamp ? DateTime.UtcNow : DateTime.Now;
+            var messageTemplate = GetMessageTemplate(state);
 
-            var logEntry = new LogEntry(createdAt, eventId, _name, logLevel, requestId, traceId, parentId, spanId, messageBuilder.ToString());
+            var logEntry = new LogEntry(createdAt, eventId, _name, logLevel, requestId, traceId, parentId, spanId, messageBuilder.ToString(), messageTemplate);
             if (exception?.Data != null)
             {
                 foreach (DictionaryEntry entry in exception.Data!)
@@ -81,6 +82,7 @@ namespace HappyTravel.StdOutLogger.Internals
             }
             
             AddScopedInformation(logEntry, messageBuilder);
+            AddMessageVariables(logEntry, state);
             
             _loggerProcessor.Log(logEntry.GetJson());
         }
@@ -112,6 +114,30 @@ namespace HappyTravel.StdOutLogger.Internals
                 },
                 stringBuilder);
         }
+
+
+        private static string GetMessageTemplate<TState>(TState state)
+        {
+            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) 
+                return string.Empty;
+
+            return values.Where(v => v.Key == MessageTemplateKey)
+                .Select(v => v.Value)
+                .SingleOrDefault()?.ToString() ?? string.Empty;
+        }
+
+
+        private static void AddMessageVariables<TState>(LogEntry logEntry, TState state)
+        {
+            if (state is not IReadOnlyList<KeyValuePair<string, object>> values) 
+                return;
+            
+            foreach (var (key, value) in values.Where(v => v.Key != MessageTemplateKey))
+                logEntry.Renderings.Add(key, value);
+        }
+
+
+        private const string MessageTemplateKey = "{OriginalFormat}";
 
 
         internal IExternalScopeProvider? ScopeProvider { get; set; }
