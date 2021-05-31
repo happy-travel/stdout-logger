@@ -133,9 +133,7 @@ namespace HappyTravel.StdOutLogger.Internals
                 return;
             
             foreach (var (key, value) in values.Where(v => v.Key != MessageTemplateKey))
-            {
                 logEntry.Renderings.Add(key, value);
-            }
         }
 
 
