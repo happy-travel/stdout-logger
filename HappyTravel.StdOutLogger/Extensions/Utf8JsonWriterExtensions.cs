@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace HappyTravel.StdOutLogger.Extensions
 {
-    public static class Utf8JsonReaderExtensions
+    public static class Utf8JsonWriterExtensions
     {
         public static void WriteDictionary(this Utf8JsonWriter writer, string propertyName, IDictionary<string, object> dictionary)
         {
