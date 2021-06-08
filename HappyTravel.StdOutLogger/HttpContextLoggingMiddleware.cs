@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using HappyTravel.StdOutLogger.Internals;
 using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace HappyTravel.StdOutLogger
 {
@@ -19,7 +20,7 @@ namespace HappyTravel.StdOutLogger
 
         public async Task Invoke(HttpContext httpContext, ILogger<HttpContextLoggingMiddleware> logger)
         {
-            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value.ToUpperInvariant()))
+            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value?.ToUpperInvariant() ?? string.Empty))
             {
                 await _next(httpContext);
                 return;
@@ -32,21 +33,21 @@ namespace HappyTravel.StdOutLogger
             var formattedHttpResponse = HttpLogHelper.GetFormattedHttpResponse(httpContext.Response);
 
             logger.Log(LogLevel.Information, _eventId, new HttpContextLogEntry(formattedHttpRequest, formattedHttpResponse), null,
-                (entry, exception) => JsonConvert.SerializeObject(entry, JsonSerializerSettings));
+                (entry, _) => JsonSerializer.Serialize(entry, JsonSerializerOptions));
         }
-
-
-        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+        
+        
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
-            Formatting = Formatting.None,
-            NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore
+            WriteIndented = false,
+            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
         };
 
 
         private const int MiddlewareEvenId = 70000;
 
-        private readonly EventId _eventId = new EventId(MiddlewareEvenId, "HttpLoggingMiddleware");
+        private readonly EventId _eventId = new (MiddlewareEvenId, "HttpLoggingMiddleware");
         private readonly RequestDelegate _next;
         private readonly HttpContextLoggingMiddlewareOptions _options;
     }
