@@ -9,12 +9,12 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
-    <Description>Limited types that are written to the log</Description>
+    <Description>Added null checking</Description>
     <PackageReleaseNotes>Added message template and variables</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
