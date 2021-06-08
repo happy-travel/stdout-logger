@@ -73,36 +73,6 @@ namespace HappyTravel.StdOutLogger.Models
             };
         }
 
-        private static void WriteDictionary(Dictionary<string, object> dictionary, string propertyName, Utf8JsonWriter writer)
-        {
-            if (!dictionary.Any()) return;
-            
-            writer.WritePropertyName(propertyName);
-            writer.WriteStartObject();
-
-            foreach (var (key, value) in dictionary)
-            {
-                writer.WritePropertyName(key);
-                
-                switch (value)
-                {
-                    case string str:
-                        writer.WriteStringValue(str);
-                        break;
-                    
-                    case IDictionary<string, string> dict:
-                        writer.WriteStringValue(JsonSerializer.Serialize(dict));
-                        break;
-                    
-                    default:
-                        writer.WriteStringValue(value?.ToString());
-                        break;
-                }
-            }
-
-            writer.WriteEndObject();
-        }
-
 
         [JsonPropertyName("timestamp")]
         public DateTime CreatedAt { get; }
