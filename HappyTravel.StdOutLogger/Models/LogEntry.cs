@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using HappyTravel.StdOutLogger.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace HappyTravel.StdOutLogger.Models
@@ -47,11 +48,9 @@ namespace HappyTravel.StdOutLogger.Models
             writer.WriteString("log_level", GetLogName(LogLevel));
             writer.WriteString("message", Message);
             writer.WriteString("messageTemplate", MessageTemplate);
-            
-            WriteDictionary(Renderings, "renderings", writer);
-            WriteDictionary(Data, "data", writer);
-            WriteDictionary(Scope, "scope", writer);
-
+            writer.WriteDictionary("renderings", Renderings);
+            writer.WriteDictionary("data", Data);
+            writer.WriteDictionary("scope", Scope);
             writer.WriteEndObject();
             writer.Flush();
             
