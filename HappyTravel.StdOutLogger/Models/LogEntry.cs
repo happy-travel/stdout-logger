@@ -108,10 +108,20 @@ namespace HappyTravel.StdOutLogger.Models
             {
                 jsonWriter.WritePropertyName(key);
                 
-                if(value is string str)
-                    jsonWriter.WriteValue(str);
-                else
-                    jsonWriter.WriteValue(JsonConvert.SerializeObject(value));
+                switch (value)
+                {
+                    case string str:
+                        jsonWriter.WriteValue(str);
+                        break;
+                    
+                    case IDictionary<string, string> dict:
+                        jsonWriter.WriteValue(JsonConvert.SerializeObject(dict));
+                        break;
+                    
+                    default:
+                        jsonWriter.WriteValue(value.ToString());
+                        break;
+                }
             }
 
             jsonWriter.WriteEndObject();
