@@ -119,7 +119,7 @@ namespace HappyTravel.StdOutLogger.Models
                         break;
                     
                     default:
-                        jsonWriter.WriteValue(value.ToString());
+                        jsonWriter.WriteValue(value?.ToString());
                         break;
                 }
             }
