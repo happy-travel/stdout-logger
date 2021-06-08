@@ -24,7 +24,10 @@ namespace HappyTravel.StdOutLogger.Extensions
                         break;
                     
                     case IDictionary<string, string> dict:
-                        writer.WriteStringValue(JsonSerializer.Serialize(dict));
+                        writer.WriteStartObject();
+                        foreach (var (k, v) in dict)
+                            writer.WriteString(k, v);
+                        writer.WriteEndObject();
                         break;
                     
                     default:
