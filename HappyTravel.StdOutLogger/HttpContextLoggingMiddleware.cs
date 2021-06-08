@@ -40,7 +40,6 @@ namespace HappyTravel.StdOutLogger
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             WriteIndented = false,
-            IgnoreNullValues = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
         };
 
