@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using HappyTravel.StdOutLogger.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace HappyTravel.StdOutLogger.Models
 {
@@ -37,48 +36,25 @@ namespace HappyTravel.StdOutLogger.Models
 
         public string GetJson()
         {
-            var stringBuilder = new StringBuilder();
-            var stringWriter = new StringWriter(stringBuilder);
+            using var stream = new MemoryStream();
+            using var writer = new Utf8JsonWriter(stream);
 
-            using var jsonWriter = new JsonTextWriter(stringWriter)
-            {
-                Formatting = Formatting.None,
-                Culture = CultureInfo.InvariantCulture,
-                DateFormatHandling = DateFormatHandling.IsoDateFormat
-            };
-
-            jsonWriter.WriteStartObject();
-
-            jsonWriter.WritePropertyName("request_id");
-            jsonWriter.WriteValue(RequestId);
-
-            jsonWriter.WritePropertyName("created_at");
-            jsonWriter.WriteValue(CreatedAt);
-
-            jsonWriter.WritePropertyName("event_id");
-            jsonWriter.WriteValue(EventId.Id);
-
-            jsonWriter.WritePropertyName("event_name");
-            jsonWriter.WriteValue(EventId.Name ?? string.Empty);
-
-            jsonWriter.WritePropertyName("log_name");
-            jsonWriter.WriteValue(LogName);
-
-            jsonWriter.WritePropertyName("log_level");
-            jsonWriter.WriteValue(GetLogName(LogLevel));
-
-            jsonWriter.WritePropertyName("message");
-            jsonWriter.WriteValue(Message);
+            writer.WriteStartObject();
+            writer.WriteString("request_id", RequestId);
+            writer.WriteString("created_at", CreatedAt);
+            writer.WriteNumber("event_id", EventId.Id);
+            writer.WriteString("event_name", EventId.Name);
+            writer.WriteString("log_name", LogName);
+            writer.WriteString("log_level", GetLogName(LogLevel));
+            writer.WriteString("message", Message);
+            writer.WriteString("messageTemplate", MessageTemplate);
+            writer.WriteDictionary("renderings", Renderings);
+            writer.WriteDictionary("data", Data);
+            writer.WriteDictionary("scope", Scope);
+            writer.WriteEndObject();
+            writer.Flush();
             
-            jsonWriter.WritePropertyName("messageTemplate");
-            jsonWriter.WriteValue(MessageTemplate);
-            
-            WriteDictionary(Renderings, "renderings", jsonWriter);
-            WriteDictionary(Data, "data", jsonWriter);
-            WriteDictionary(Scope, "scope", jsonWriter);
-
-            jsonWriter.WriteEndObject();
-            return stringBuilder.ToString();
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
 
 
@@ -97,74 +73,44 @@ namespace HappyTravel.StdOutLogger.Models
             };
         }
 
-        private static void WriteDictionary(Dictionary<string, object> dictionary, string propertyName, JsonWriter jsonWriter)
-        {
-            if (!dictionary.Any()) return;
-            
-            jsonWriter.WritePropertyName(propertyName);
-            jsonWriter.WriteStartObject();
 
-            foreach (var (key, value) in dictionary)
-            {
-                jsonWriter.WritePropertyName(key);
-                
-                switch (value)
-                {
-                    case string str:
-                        jsonWriter.WriteValue(str);
-                        break;
-                    
-                    case IDictionary<string, string> dict:
-                        jsonWriter.WriteValue(JsonConvert.SerializeObject(dict));
-                        break;
-                    
-                    default:
-                        jsonWriter.WriteValue(value?.ToString());
-                        break;
-                }
-            }
-
-            jsonWriter.WriteEndObject();
-        }
-
-
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime CreatedAt { get; }
 
-        [JsonProperty("event_id")]
+        [JsonPropertyName("event_id")]
         public EventId EventId { get; }
 
-        [JsonProperty("log_name")]
+        [JsonPropertyName("log_name")]
         public string LogName { get; }
 
-        [JsonProperty("log_level")]
+        [JsonPropertyName("log_level")]
         public LogLevel LogLevel { get; }
 
-        [JsonProperty("request_id")]
+        [JsonPropertyName("request_id")]
         public string RequestId { get; }
 
-        [JsonProperty("trace_id")]
+        [JsonPropertyName("trace_id")]
         public string TraceId { get; }
 
-        [JsonProperty("parent_span_id")]
+        [JsonPropertyName("parent_span_id")]
         public string ParentSpanId { get; }
 
-        [JsonProperty("span_id")]
+        [JsonPropertyName("span_id")]
         public string SpanId { get; }
 
-        [JsonProperty("message")]
+        [JsonPropertyName("message")]
         public string Message { get; }
         
-        [JsonProperty("messageTemplate")]
+        [JsonPropertyName("messageTemplate")]
         public string MessageTemplate { get; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public Dictionary<string, object> Data { get; }
         
-        [JsonProperty("scope")]
+        [JsonPropertyName("scope")]
         public Dictionary<string, object> Scope { get; }
         
-        [JsonProperty("renderings")]
+        [JsonPropertyName("renderings")]
         public Dictionary<string, object> Renderings { get; }
     }
 }
