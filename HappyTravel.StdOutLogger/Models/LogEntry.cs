@@ -29,7 +29,7 @@ namespace HappyTravel.StdOutLogger.Models
             MessageTemplate = messageTemplate;
 
             Data = new Dictionary<string, object>();
-            Scope = new Dictionary<string, object>();
+            Scope = new List<KeyValuePair<string, object>>();
             Renderings = new Dictionary<string, object>();
         }
 
@@ -48,9 +48,9 @@ namespace HappyTravel.StdOutLogger.Models
             writer.WriteString("log_level", GetLogName(LogLevel));
             writer.WriteString("message", Message);
             writer.WriteString("messageTemplate", MessageTemplate);
-            writer.WriteDictionary("renderings", Renderings);
-            writer.WriteDictionary("data", Data);
-            writer.WriteDictionary("scope", Scope);
+            writer.WriteCollection("renderings", Renderings);
+            writer.WriteCollection("data", Data);
+            writer.WriteCollection("scope", Scope);
             writer.WriteEndObject();
             writer.Flush();
             
@@ -108,7 +108,7 @@ namespace HappyTravel.StdOutLogger.Models
         public Dictionary<string, object> Data { get; }
         
         [JsonPropertyName("scope")]
-        public Dictionary<string, object> Scope { get; }
+        public List<KeyValuePair<string, object>> Scope { get; }
         
         [JsonPropertyName("renderings")]
         public Dictionary<string, object> Renderings { get; }
