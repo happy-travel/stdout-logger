@@ -23,9 +23,9 @@ namespace HappyTravel.StdOutLogger.Extensions
                         writer.WriteStringValue(str);
                         break;
                     
-                    case IDictionary<string, string> dict:
+                    case ICollection<KeyValuePair<string, string>> collection:
                         writer.WriteStartObject();
-                        foreach (var (k, v) in dict)
+                        foreach (var (k, v) in collection)
                             writer.WriteString(k, v);
                         writer.WriteEndObject();
                         break;
