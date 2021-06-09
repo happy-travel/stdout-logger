@@ -8,7 +8,8 @@ namespace HappyTravel.StdOutLogger.Extensions
     {
         public static void WriteDictionary(this Utf8JsonWriter writer, string propertyName, IDictionary<string, object> dictionary)
         {
-            if (!dictionary.Any()) return;
+            if (!dictionary.Any())
+                return;
             
             writer.WritePropertyName(propertyName);
             writer.WriteStartObject();
