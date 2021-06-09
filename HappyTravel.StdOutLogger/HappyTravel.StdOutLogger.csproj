@@ -8,8 +8,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
-    <Description>Removed Newtonsoft.Json</Description>
-    <PackageReleaseNotes>Added message template and variables</PackageReleaseNotes>
+    <Description>Logger for writing logs to the stdout in JSON format</Description>
+    <PackageReleaseNotes>Removed Newtonsoft.Json</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
