@@ -105,7 +105,7 @@ namespace HappyTravel.StdOutLogger.Internals
                     if (scope is IEnumerable<KeyValuePair<string, object>> properties)
                     {
                         foreach (var (key, value) in properties)
-                            logEntry.Scope.Add(key, value?.ToString() ?? string.Empty);
+                            logEntry.Scope.Add(new KeyValuePair<string, object>(key, value?.ToString() ?? string.Empty));
                     }
                     else if (scope != null)
                     {

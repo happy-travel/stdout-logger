@@ -6,7 +6,7 @@ namespace HappyTravel.StdOutLogger.Extensions
 {
     public static class Utf8JsonWriterExtensions
     {
-        public static void WriteDictionary(this Utf8JsonWriter writer, string propertyName, IDictionary<string, object> dictionary)
+        public static void WriteCollection(this Utf8JsonWriter writer, string propertyName, ICollection<KeyValuePair<string, object>> dictionary)
         {
             if (!dictionary.Any())
                 return;
