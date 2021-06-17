@@ -31,6 +31,13 @@ namespace HappyTravel.StdOutLogger.Extensions
                         writer.WriteEndObject();
                         break;
                     
+                    case ICollection<string> collection:
+                        writer.WriteStartArray();
+                        foreach (var s in collection)
+                            writer.WriteStringValue(s);
+                        writer.WriteEndArray();
+                        break;
+                    
                     default:
                         writer.WriteStringValue(value?.ToString());
                         break;
