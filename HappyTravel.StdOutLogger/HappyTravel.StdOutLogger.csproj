@@ -9,11 +9,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Logger for writing logs to the stdout in JSON format</Description>
-    <PackageReleaseNotes>Added string collections support</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ability to skip logging by HttpMethod</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/happy-travel/stdout-logger</PackageProjectUrl>
     <RepositoryURL>https://github.com/happy-travel/stdout-logger</RepositoryURL>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.3.2</Version>
+    <Version>1.3.3</Version>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
     <IsPackable>True</IsPackable>
