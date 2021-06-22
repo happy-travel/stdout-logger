@@ -20,7 +20,8 @@ namespace HappyTravel.StdOutLogger
 
         public async Task Invoke(HttpContext httpContext, ILogger<HttpContextLoggingMiddleware> logger)
         {
-            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value?.ToUpperInvariant() ?? string.Empty))
+            if (_options.IgnoredPaths.Contains(httpContext.Request.Path.Value?.ToUpperInvariant() ?? string.Empty) || 
+                _options.IgnoredMethods.Contains(httpContext.Request.Method.ToUpperInvariant()))
             {
                 await _next(httpContext);
                 return;

@@ -10,8 +10,15 @@ namespace HappyTravel.StdOutLogger.Options
             get => _ignoredPaths.Select(i => i.ToUpperInvariant()).ToHashSet();
             set => _ignoredPaths = value;
         }
-        
 
-        private HashSet<string> _ignoredPaths = new HashSet<string> {"/health"};
+        public HashSet<string> IgnoredMethods
+        {
+            get => _ignoredMethods.Select(i => i.ToUpperInvariant()).ToHashSet();
+            set => _ignoredMethods = value;
+        }
+
+
+        private HashSet<string> _ignoredPaths = new() {"/health"};
+        private HashSet<string> _ignoredMethods = new();
     }
 }
