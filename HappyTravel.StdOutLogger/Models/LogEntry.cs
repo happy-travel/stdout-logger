@@ -30,7 +30,6 @@ namespace HappyTravel.StdOutLogger.Models
             Data = new Dictionary<string, object>();
             Scope = new List<KeyValuePair<string, object>>();
             Renderings = new Dictionary<string, object>();
-            Baggage = new Dictionary<string, object>();
         }
 
 
@@ -51,7 +50,6 @@ namespace HappyTravel.StdOutLogger.Models
             writer.WriteCollection("renderings", Renderings);
             writer.WriteCollection("data", Data);
             writer.WriteCollection("scope", Scope);
-            writer.WriteCollection("baggage", Baggage);
             writer.WriteEndObject();
             writer.Flush();
             
@@ -113,8 +111,5 @@ namespace HappyTravel.StdOutLogger.Models
         
         [JsonPropertyName("renderings")]
         public Dictionary<string, object> Renderings { get; }
-        
-        [JsonPropertyName("baggage")]
-        public Dictionary<string, object> Baggage { get; }
     }
 }

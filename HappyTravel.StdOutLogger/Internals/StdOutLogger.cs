@@ -142,7 +142,7 @@ namespace HappyTravel.StdOutLogger.Internals
         private static void AddBaggageData(LogEntry logEntry)
         {
             foreach (var (key, value) in Baggage.Current)
-                logEntry.Baggage.Add(key, value);
+                logEntry.Scope.Add(new KeyValuePair<string, object>(key, value));
         }
 
 
