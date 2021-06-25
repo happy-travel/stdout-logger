@@ -8,6 +8,7 @@ using HappyTravel.StdOutLogger.Models;
 using HappyTravel.StdOutLogger.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
 
 namespace HappyTravel.StdOutLogger.Internals
 {
@@ -83,6 +84,7 @@ namespace HappyTravel.StdOutLogger.Internals
             
             AddScopedInformation(logEntry, messageBuilder);
             AddMessageVariables(logEntry, state);
+            AddBaggageData(logEntry);
             
             _loggerProcessor.Log(logEntry.GetJson());
         }
@@ -134,6 +136,13 @@ namespace HappyTravel.StdOutLogger.Internals
             
             foreach (var (key, value) in values.Where(v => v.Key != MessageTemplateKey))
                 logEntry.Renderings.Add(key, value);
+        }
+
+
+        private static void AddBaggageData(LogEntry logEntry)
+        {
+            foreach (var (key, value) in Baggage.Current)
+                logEntry.Baggage.Add(key, value);
         }
 
 
